@@ -31,7 +31,7 @@ public class Start {
         long count = 0;
         for (int i = 0; i < maleFish; i++) { // Add male fish
             Coordinate coordinate = Coordinate.createCoordinate(aquarium.getWidth(), aquarium.getLength(), aquarium.getHeight());
-            Fish fish = new Fish(Gender.MALE, coordinate, 5L);
+            Fish fish = new Fish(Gender.MALE, coordinate);
             for (Fish countFish : aquarium.getFishList()) {
                 count += countFish.getSize();
                 if (count >= size){
@@ -43,7 +43,7 @@ public class Start {
         }
         for (int i = 0; i < femaleFish; i++) {  // Add female fish
             Coordinate coordinate = Coordinate.createCoordinate(aquarium.getWidth(), aquarium.getLength(), aquarium.getHeight());
-            Fish fish = new Fish(Gender.FEMALE, coordinate, 5L);
+            Fish fish = new Fish(Gender.FEMALE, coordinate);
             for (Fish countFish : aquarium.getFishList()) {
                 count += countFish.getSize();
                 if (count >= size){

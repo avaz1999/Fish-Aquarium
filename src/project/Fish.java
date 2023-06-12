@@ -13,13 +13,12 @@ public class Fish {
     private long birthTime;
     private Coordinate position;
     private boolean alive;
-    private long size;
+    private long size = 5L;
 
-    public Fish(Gender gender, Coordinate position,Long size) {
+    public Fish(Gender gender, Coordinate position) {
         this.position = position;
         this.gender = gender;
         this.lifespan = random.nextInt(10) + 1;
-        this.size = size;
         birthTime = System.currentTimeMillis();
         alive = true;
     }

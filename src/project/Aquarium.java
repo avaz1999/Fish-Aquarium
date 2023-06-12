@@ -83,7 +83,7 @@ public class Aquarium {
                     !fishA.getGender().equals(fishB.getGender())) {
                 Gender gender = random.nextBoolean() ? Gender.MALE : Gender.FEMALE;
                 Coordinate coordinate = Coordinate.createCoordinate(aquarium.getWidth(), aquarium.getLength(), aquarium.getHeight());
-                Fish fish = new Fish(gender, coordinate, 5L);
+                Fish fish = new Fish(gender, coordinate);
                 fishList.add(fish);
                 System.out.println("The fish met at the coordinate: [" + coordinate.getCoordinateX() + ", " + coordinate.getCoordinateY() + ", " + coordinate.getCoordinateZ() + "] This fish is gender:" + fish.getGender() + ", lifespan: " + fish.getLifespan());
             }
