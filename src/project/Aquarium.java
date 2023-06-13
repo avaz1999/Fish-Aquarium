@@ -10,10 +10,11 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static project.Start.aquarium;
+import static project.enums.Gender.FEMALE;
 
 public class Aquarium {
     private static final Random random = ThreadLocalRandom.current();
-    private Long id  = random.nextLong(1000)+1;
+    private Long id = random.nextLong(1000) + 1;
     private int width;
     private int length;
     private int height;
@@ -31,28 +32,30 @@ public class Aquarium {
         fishList = new ArrayList<>();
     }
 
-//    Fish fishA = new Fish(Gender.MALE,new Coordinate(1,3,3));
-//    Fish fishB = new Fish(Gender.FEMALE,new Coordinate(1,3,3));
-//        fishList.add(fishA);
-//        fishList.add(fishB);
+
     public void simulate() {
+        Fish fishA = new Fish(Gender.MALE, new Coordinate(1, 3, 3), "", 0, 0);
+        Fish fishB = new Fish(FEMALE, new Coordinate(1, 3, 3), "", 0, 0);
+        fishList.add(fishA);
+        fishList.add(fishB);
         Thread thread = new Thread(() -> {
             while (true) {
                 try {
-                    if (fishList.size() == 0){
+                    if (fishList.size() == 0) {
                         System.out.println("Aquarium is empty");
                         break;
                     }
                     for (int i = 0; i < fishList.size(); i++) {
                         Fish fish = fishList.get(i);
-                        if (fish.isAlive()){
-                            System.out.println(i + 1 + " ID: "+fish.getId()+ " Thread Fish is swimming gender: " + fish.getGender() +
+                        if (fish.isAlive()) {
+                            System.out.println(i + 1 + " ID: " + fish.getId() + " Thread Fish is swimming gender: " + fish.getGender() +
                                     ", lifespan: " + fish.getLifespan() +
                                     ", position: [" + fish.getPosition().getCoordinateX() + ", " +
                                     fish.getPosition().getCoordinateY() + ", " +
-                                    fish.getPosition().getCoordinateZ() + "]");
+                                    fish.getPosition().getCoordinateZ() + "]," +
+                                    "Parent: " + fish.getParent());
                             fish.setLifespan(fish.getLifespan() - 1);
-                            if (fish.getLifespan() < 1){
+                            if (fish.getLifespan() < 1) {
                                 System.out.println("This fish is died: ID " + fish.getId());
                                 fishList.remove(i);
                             }
@@ -60,7 +63,7 @@ public class Aquarium {
                     }
                     checkCollision(fishList);
                     for (Fish fish : fishList) {
-                        Coordinate coordinate = Coordinate.createCoordinate(width,length,height);
+                        Coordinate coordinate = Coordinate.createCoordinate(width, length, height);
                         fish.setPosition(coordinate);
                     }
                     Thread.sleep(1000);
@@ -73,22 +76,51 @@ public class Aquarium {
     }
 
     private void checkCollision(List<Fish> fishList) {
-        Aquarium aquarium = new Aquarium(10, 20, 30);
-        for (int i = 0; i < fishList.size() -1; i++) {
+        for (int i = 0; i < fishList.size() - 1; i++) {
             Fish fishA = fishList.get(i);
             Fish fishB = fishList.get(i + 1);
-            if (fishA.getPosition().getCoordinateX() == fishB.getPosition().getCoordinateX() &&
-                    fishA.getPosition().getCoordinateY() == fishB.getPosition().getCoordinateY() &&
-                    fishA.getPosition().getCoordinateZ() == fishB.getPosition().getCoordinateZ() &&
-                    !fishA.getGender().equals(fishB.getGender())) {
-                Gender gender = random.nextBoolean() ? Gender.MALE : Gender.FEMALE;
+            long fatherId = fishA.getGender().equals(Gender.MALE) ? fishA.getId() : fishB.getId();
+            long motherId = fishA.getGender().equals(FEMALE) ? fishB.getId() : fishA.getId();
+            int xA = fishA.getPosition().getCoordinateX();
+            int xB = fishB.getPosition().getCoordinateX();
+            int yA = fishA.getPosition().getCoordinateY();
+            int yB = fishB.getPosition().getCoordinateY();
+            int zA = fishA.getPosition().getCoordinateZ();
+            int zB = fishB.getPosition().getCoordinateZ();
+
+            if (checkCoordinate(xA,xB,yA,yB,zA,zB) &&
+                    !fishA.getGender().equals(fishB.getGender()) &&
+                    fishA.getFatherId() != fatherId &&
+                    fishA.getMotherId() != motherId &&
+                    fishB.getFatherId() != fatherId &&
+                    fishB.getMotherId() != motherId) {
+                Gender gender = random.nextBoolean() ? Gender.MALE : FEMALE;
                 Coordinate coordinate = Coordinate.createCoordinate(aquarium.getWidth(), aquarium.getLength(), aquarium.getHeight());
-                Fish fish = new Fish(gender, coordinate);
+
+                String parent = "Father: " + fishA.getId() + ", Mother " + fishB.getId();
+                Fish fish = new Fish(gender, coordinate, parent, fatherId, motherId);
                 fishList.add(fish);
-                System.out.println("The fish met at the coordinate: [" + coordinate.getCoordinateX() + ", " + coordinate.getCoordinateY() + ", " + coordinate.getCoordinateZ() + "] This fish is gender:" + fish.getGender() + ", lifespan: " + fish.getLifespan());
+                System.out.println("The fish met at the coordinate: ["
+                        + fishA.getPosition().getCoordinateX() + ", "
+                        + fishA.getPosition().getCoordinateY() + ", "
+                        + fishA.getPosition().getCoordinateZ() + "] " +
+                        "This fish ID: " + fish.getId() +
+                        " This fish is gender:"
+                        + fish.getGender() + ", lifespan: "
+                        + fish.getLifespan() + ", This fish parent: "
+                        + fish.getParent());
             }
         }
     }
+
+    private boolean checkGender(Gender male, Gender female) {
+        return male.equals(female);
+    }
+
+    private boolean checkCoordinate(int xA, int xB, int yA, int yB, int zA, int zB) {
+        return xA == xB && yA == yB && zA == zB;
+    }
+
 
     public Long getId() {
         return id;
