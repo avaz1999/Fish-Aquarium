@@ -14,22 +14,26 @@ public class Start {
 
     public static void main(String[] args) {
         int weight = 2;
-        int length = 5;
+        int length = 20;
         int height = 5;
 
         createAquarium(weight, length, height);
     }
+
     static long count = 0;
+
     public static void createAquarium(int width, int length, int height) {
         aquarium.setWidth(width);
         aquarium.setLength(length);
         aquarium.setHeight(height);
 
-        int maleFish = random.nextInt(10) + 1;  //Generate random male fish
-        int femaleFish = random.nextInt(10) + 1;  //Generate random female fish
+        int maleFish = random.nextInt(100) + 1;  //Generate random male fish
+        int femaleFish = random.nextInt(100) + 1;  //Generate random female fish
+        long size = (long) width * length * height;
+        long count = 0;
         for (int i = 0; i < maleFish; i++) { // Add male fish
             Coordinate coordinate = Coordinate.createCoordinate(aquarium.getWidth(), aquarium.getLength(), aquarium.getHeight());
-            Fish fish = new Fish(Gender.MALE, coordinate,"",0,0);
+            Fish fish = new Fish(Gender.MALE, coordinate, "", 0, 0);
             if (checkFull()) {
                 System.out.println("The aquarium is filled with : " + count + " fish");
                 break;
@@ -38,7 +42,7 @@ public class Start {
         }
         for (int i = 0; i < femaleFish; i++) {  // Add female fish
             Coordinate coordinate = Coordinate.createCoordinate(aquarium.getWidth(), aquarium.getLength(), aquarium.getHeight());
-            Fish fish = new Fish(Gender.FEMALE, coordinate,"",0,0);
+            Fish fish = new Fish(Gender.FEMALE, coordinate, "", 0, 0);
             if (checkFull()) {
                 System.out.println("The aquarium is filled with : " + count + " fish");
                 break;
@@ -48,8 +52,8 @@ public class Start {
         aquarium.simulate();
     }
 
-    private static boolean checkFull() {
-         long sizeAquarium =  ((long) aquarium.getWidth() * aquarium.getLength() * aquarium.getHeight());
+    public static boolean checkFull() {
+        long sizeAquarium = ((long) aquarium.getWidth() * aquarium.getLength() * aquarium.getHeight());
         for (Fish fish : aquarium.getFishList()) {
             count += fish.getSize();
             if (count >= sizeAquarium) {

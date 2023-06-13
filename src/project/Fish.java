@@ -1,6 +1,7 @@
 package project;
 
 import project.enums.Gender;
+import project.enums.MoveType;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -17,6 +18,7 @@ public class Fish {
     private boolean alive;
     private long size = 2L;
     private String parent = " ";
+    private MoveType moveType;
 
     public Fish(Gender gender, Coordinate position,String parent,long fatherId,long motherId) {
         this.position = position;
@@ -32,9 +34,9 @@ public class Fish {
     public void swim() {
         System.out.println("Thread Fish is swimming gender: " + gender +
                 ", lifespan: " + lifespan +
-                ", position: [" + position.getCoordinateX() + ", " +
-                position.getCoordinateY() + ", " +
-                position.getCoordinateZ() + "]");
+                ", position: [" + position.getX() + ", " +
+                position.getY() + ", " +
+                position.getZ() + "]");
     }
 
     public Fish() {

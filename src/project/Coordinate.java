@@ -5,41 +5,41 @@ import java.util.Random;
 public class Coordinate {
     Random random = new Random();
     private Long id = random.nextLong(1000) + 1;
-    private int coordinateX;
-    private int coordinateY;
-    private int coordinateZ;
+    private int x;
+    private int y;
+    private int z;
 
     public Coordinate(int coordinateX, int coordinateY, int coordinateZ){
-        this.coordinateX = coordinateX;
-        this.coordinateY = coordinateY;
-        this.coordinateZ = coordinateZ;
+        this.x = coordinateX;
+        this.y = coordinateY;
+        this.z = coordinateZ;
     }
 
     public Coordinate() {
     }
 
-    public int getCoordinateX() {
-        return coordinateX;
+    public int getX() {
+        return x;
     }
 
-    public void setCoordinateX(int coordinateX) {
-        this.coordinateX = coordinateX;
+    public void setX(int x) {
+        this.x = x;
     }
 
-    public int getCoordinateY() {
-        return coordinateY;
+    public int getY() {
+        return y;
     }
 
-    public void setCoordinateY(int coordinateY) {
-        this.coordinateY = coordinateY;
+    public void setY(int y) {
+        this.y = y;
     }
 
-    public int getCoordinateZ() {
-        return coordinateZ;
+    public int getZ() {
+        return z;
     }
 
-    public void setCoordinateZ(int coordinateZ) {
-        this.coordinateZ = coordinateZ;
+    public void setZ(int z) {
+        this.z = z;
     }
 
     public Long getId() {
@@ -53,9 +53,9 @@ public class Coordinate {
     public static Coordinate createCoordinate(int width, int length, int height) {
         Random random = new Random();
         Coordinate coordinate =  new Coordinate();
-        coordinate.setCoordinateX(random.nextInt(width) + 1);
-        coordinate.setCoordinateY(random.nextInt(length) + 1);
-        coordinate.setCoordinateZ(random.nextInt(height) + 1);
+        coordinate.setX(random.nextInt(width) + 1);
+        coordinate.setY(random.nextInt(length) + 1);
+        coordinate.setZ(random.nextInt(height) + 1);
         return coordinate;
     }
 }
