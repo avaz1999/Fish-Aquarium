@@ -13,9 +13,9 @@ public class Start {
     private static final Random random = ThreadLocalRandom.current();
 
     public static void main(String[] args) {
-        int weight = 2;
-        int length = 2;
-        int height = 5;
+        int weight = 5;
+        int length = 5;
+        int height = 10;
 
         createAquarium(weight, length, height);
     }
@@ -26,8 +26,8 @@ public class Start {
         aquarium.setLength(length);
         aquarium.setHeight(height);
 
-        int maleFish = random.nextInt(10) + 1;  //Generate random male fish
-        int femaleFish = random.nextInt(10) + 1;  //Generate random female fish
+        int maleFish = 30;  //random.nextInt(50) + 1;  //Generate random male fish
+        int femaleFish = 30;  //random.nextInt(50) + 1;  //Generate random female fish
 
         Fish.createFish(maleFish,Gender.MALE);  // Add male fish
         Fish.createFish(femaleFish,Gender.FEMALE);  // ADd female fish

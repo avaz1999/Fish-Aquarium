@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static project.Fish.swimming;
 import static project.Start.aquarium;
 import static project.enums.Gender.FEMALE;
+import static project.enums.Gender.MALE;
 
 public class Aquarium {
     private static final Random random = ThreadLocalRandom.current();
@@ -35,6 +36,13 @@ public class Aquarium {
 
     public void simulate() {
 
+//        Fish fish2 = new Fish(MALE, new Coordinate(1, 1, 1), "", 0, 0);
+//        Fish fish3 = new Fish(FEMALE, new Coordinate(1, 1, 1), "", 0, 0);
+//        String parent = "Parent: " + "FatherId: " + fish2.getId() + " MotherId: " + fish3.getId();
+//        Fish fish1 = new Fish(FEMALE, new Coordinate(fish2.getPosition().getX(), fish2.getPosition().getY(), fish2.getPosition().getZ()), parent, fish2.getId(), fish3.getMotherId());
+//        fishList.add(fish2);
+//        fishList.add(fish3);
+//        fishList.add(fish1);
         Thread thread = new Thread(() -> {
             while (true) {
                 try {
@@ -47,7 +55,7 @@ public class Aquarium {
                     checkCollision(fishList);
 
                     for (Fish fish : fishList) {
-                        Coordinate coordinate = new Coordinate(aquarium.width,aquarium.length,aquarium.height);
+                        Coordinate coordinate = Coordinate.createCoordinate(aquarium.width, aquarium.length, aquarium.height);
                         fish.setPosition(coordinate);
                     }
 
@@ -74,13 +82,18 @@ public class Aquarium {
                 int yB = fishB.getPosition().getY();
                 int zB = fishB.getPosition().getZ();
 
-                long fatherId = fishA.getGender().equals(Gender.MALE) ? fishA.getId() : fishB.getId();
+                long fatherId = fishA.getGender().equals(MALE) ? fishA.getId() : fishB.getId();
                 long motherId = fishA.getGender().equals(FEMALE) ? fishB.getId() : fishA.getId();
                 if (checkCoordinate(xA, xB, yA, yB, zA, zB) &&
                         !fishA.getGender().equals(fishB.getGender()) &&
-                        fishB.getFatherId() == fatherId &&
+                        (fishA.getFatherId() == fatherId)) {
+                    System.out.println("This fish is parent 1: " + fishB.getId() + " equals " + motherId);
+
+                }
+                if (checkCoordinate(xA, xB, yA, yB, zA, zB) &&
+                        !fishA.getGender().equals(fishB.getGender()) &&
                         fishB.getMotherId() == motherId) {
-                    System.out.println("This fish is parent: ---------------------------------");
+                    System.out.println("This fish is parent 2: " + fishB.getMotherId() + " equals " + fatherId);
 
                 }
                 if (checkCoordinate(xA, xB, yA, yB, zA, zB) &&
@@ -89,10 +102,11 @@ public class Aquarium {
                         fishA.getMotherId() != motherId &&
                         fishB.getFatherId() != fatherId &&
                         fishB.getMotherId() != motherId) {
-                    Gender gender = random.nextBoolean() ? Gender.MALE : FEMALE;
-                    Coordinate coordinate = Coordinate.createCoordinate(aquarium.getWidth(), aquarium.getLength(), aquarium.getHeight());
-
-                    String parent = "Father: " + fishA.getId() + ", Mother " + fishB.getId();
+                    Gender gender = random.nextBoolean() ? MALE : FEMALE;
+                    Coordinate coordinate = new Coordinate(xA, yA, zA);
+                    long fId = fishA.getGender().equals(MALE) ? fishA.getId() : fishB.getId();
+                    long mId = fishA.getGender().equals(FEMALE) ? fishA.getId() : fishB.getId();
+                    String parent = "Father: " + fId + ", Mother " + mId;
 //                    MoveType moveType = MoveType.values()[random.nextInt(MoveType.values().length)];
                     Fish fish = new Fish(gender, coordinate, parent, fatherId, motherId);
 
@@ -104,7 +118,9 @@ public class Aquarium {
                             "This fish ID: " + fish.getId() +
                             " This fish is gender:"
                             + fish.getGender() + ", lifespan: "
-                            + fish.getLifespan() + ", This fish parent: "
+                            + fish.getLifespan() + " Current coordinate: [" + fish.getPosition().getX() + ", "
+                            + fish.getPosition().getY() + ", "
+                            + fish.getPosition().getZ() + "] " + ", This fish parent: "
                             + fish.getParent());
 
                     if (checkFullness()) {
