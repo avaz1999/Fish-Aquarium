@@ -14,54 +14,25 @@ public class Start {
 
     public static void main(String[] args) {
         int weight = 2;
-        int length = 20;
+        int length = 2;
         int height = 5;
 
         createAquarium(weight, length, height);
     }
 
-    static long count = 0;
 
     public static void createAquarium(int width, int length, int height) {
         aquarium.setWidth(width);
         aquarium.setLength(length);
         aquarium.setHeight(height);
 
-        int maleFish = random.nextInt(100) + 1;  //Generate random male fish
-        int femaleFish = random.nextInt(100) + 1;  //Generate random female fish
-        long size = (long) width * length * height;
-        long count = 0;
-        for (int i = 0; i < maleFish; i++) { // Add male fish
-            Coordinate coordinate = Coordinate.createCoordinate(aquarium.getWidth(), aquarium.getLength(), aquarium.getHeight());
-            Fish fish = new Fish(Gender.MALE, coordinate, "", 0, 0);
-            if (checkFull()) {
-                System.out.println("The aquarium is filled with : " + count + " fish");
-                break;
-            }
-            aquarium.addFish(fish);
-        }
-        for (int i = 0; i < femaleFish; i++) {  // Add female fish
-            Coordinate coordinate = Coordinate.createCoordinate(aquarium.getWidth(), aquarium.getLength(), aquarium.getHeight());
-            Fish fish = new Fish(Gender.FEMALE, coordinate, "", 0, 0);
-            if (checkFull()) {
-                System.out.println("The aquarium is filled with : " + count + " fish");
-                break;
-            }
-            aquarium.addFish(fish);
-        }
-        aquarium.simulate();
-    }
+        int maleFish = random.nextInt(10) + 1;  //Generate random male fish
+        int femaleFish = random.nextInt(10) + 1;  //Generate random female fish
 
-    public static boolean checkFull() {
-        long sizeAquarium = ((long) aquarium.getWidth() * aquarium.getLength() * aquarium.getHeight());
-        for (Fish fish : aquarium.getFishList()) {
-            count += fish.getSize();
-            if (count >= sizeAquarium) {
-                return true;
-            }
-            break;
-        }
-        return false;
+        Fish.createFish(maleFish,Gender.MALE);  // Add male fish
+        Fish.createFish(femaleFish,Gender.FEMALE);  // ADd female fish
+
+        aquarium.simulate();
     }
 
 

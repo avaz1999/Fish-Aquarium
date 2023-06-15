@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static project.Fish.swimming;
 import static project.Start.aquarium;
-import static project.Start.checkFull;
 import static project.enums.Gender.FEMALE;
 
 public class Aquarium {
@@ -38,31 +38,19 @@ public class Aquarium {
         Thread thread = new Thread(() -> {
             while (true) {
                 try {
-                    if (fishList.size() == 0) {
+                    if (checkAquariumEmpty()) {
                         System.out.println("Aquarium is empty");
                         break;
                     }
-                    for (int i = 0; i < fishList.size(); i++) {
-                        Fish fish = fishList.get(i);
-                        if (fish.isAlive()) {
-                            System.out.println(i + 1 + " ID: " + fish.getId() + " Thread Fish is swimming gender: " + fish.getGender() +
-                                    ", lifespan: " + fish.getLifespan() +
-                                    ", position: [" + fish.getPosition().getX() + ", " +
-                                    fish.getPosition().getY() + ", " +
-                                    fish.getPosition().getZ() + "]," +
-                                    "Parent: " + fish.getParent());
-                            if (fish.getLifespan() < 1) {
-                                System.out.println("This fish is died: ID " + fish.getId());
-                                fishList.remove(i);
-                            }
-                            fish.setLifespan(fish.getLifespan() - 1);
-                        }
-                    }
+                    swimming();
+
                     checkCollision(fishList);
+
                     for (Fish fish : fishList) {
-                        Coordinate coordinate = Coordinate.createCoordinate(width, length, height);
+                        Coordinate coordinate = new Coordinate(aquarium.width,aquarium.length,aquarium.height);
                         fish.setPosition(coordinate);
                     }
+
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -91,7 +79,7 @@ public class Aquarium {
                 if (checkCoordinate(xA, xB, yA, yB, zA, zB) &&
                         !fishA.getGender().equals(fishB.getGender()) &&
                         fishB.getFatherId() == fatherId &&
-                        fishB.getMotherId() == motherId){
+                        fishB.getMotherId() == motherId) {
                     System.out.println("This fish is parent: ---------------------------------");
 
                 }
@@ -105,22 +93,25 @@ public class Aquarium {
                     Coordinate coordinate = Coordinate.createCoordinate(aquarium.getWidth(), aquarium.getLength(), aquarium.getHeight());
 
                     String parent = "Father: " + fishA.getId() + ", Mother " + fishB.getId();
+//                    MoveType moveType = MoveType.values()[random.nextInt(MoveType.values().length)];
                     Fish fish = new Fish(gender, coordinate, parent, fatherId, motherId);
-                    if (!checkFull()) {
-                        fishList.add(fish);
-                        System.out.println("The fish met at the coordinate: ["
-                                + fishA.getPosition().getX() + ", "
-                                + fishA.getPosition().getY() + ", "
-                                + fishA.getPosition().getZ() + "] " +
-                                "This fish ID: " + fish.getId() +
-                                " This fish is gender:"
-                                + fish.getGender() + ", lifespan: "
-                                + fish.getLifespan() + ", This fish parent: "
-                                + fish.getParent());
-                    break;
+
+                    fishList.add(fish);
+                    System.out.println("The fish met at the coordinate: ["
+                            + fishA.getPosition().getX() + ", "
+                            + fishA.getPosition().getY() + ", "
+                            + fishA.getPosition().getZ() + "] " +
+                            "This fish ID: " + fish.getId() +
+                            " This fish is gender:"
+                            + fish.getGender() + ", lifespan: "
+                            + fish.getLifespan() + ", This fish parent: "
+                            + fish.getParent());
+
+                    if (checkFullness()) {
+                        fishList.remove(fish);
+                        System.out.println("Aquarium is full");
+                        break;
                     }
-                    fishList.remove(fish);
-                    System.out.println("Aquarium is full");
                 }
             }
 
@@ -128,8 +119,8 @@ public class Aquarium {
         }
     }
 
-    private boolean checkGender(Gender male, Gender female) {
-        return male.equals(female);
+    private boolean checkAquariumEmpty() {
+        return fishList.size() == 0;
     }
 
     private boolean checkCoordinate(int xA, int xB, int yA, int yB, int zA, int zB) {
@@ -181,6 +172,17 @@ public class Aquarium {
         this.height = height;
     }
 
+    public boolean checkFullness() {
+        long sizeAquarium = (long) width * length * height;
+        long countFishSize = 0;
+        for (Fish fish : fishList) {
+            countFishSize += fish.getSize();
+            if (countFishSize >= sizeAquarium) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 

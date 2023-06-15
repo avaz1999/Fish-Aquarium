@@ -1,10 +1,11 @@
 package project;
 
 import project.enums.Gender;
-import project.enums.MoveType;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static project.Start.aquarium;
 
 public class Fish {
     private static final Random random = ThreadLocalRandom.current();
@@ -18,7 +19,6 @@ public class Fish {
     private boolean alive;
     private long size = 2L;
     private String parent = " ";
-    private MoveType moveType;
 
     public Fish(Gender gender, Coordinate position,String parent,long fatherId,long motherId) {
         this.position = position;
@@ -31,12 +31,36 @@ public class Fish {
         alive = true;
     }
 
-    public void swim() {
-        System.out.println("Thread Fish is swimming gender: " + gender +
-                ", lifespan: " + lifespan +
-                ", position: [" + position.getX() + ", " +
-                position.getY() + ", " +
-                position.getZ() + "]");
+    public static void createFish(int f, Gender gender){
+        for (int i = 0; i < f; i++) {
+            Coordinate coordinate = Coordinate.createCoordinate(aquarium.getWidth(), aquarium.getLength(), aquarium.getHeight());
+            Fish fish = new Fish(gender, coordinate, "", 0, 0);
+            if (aquarium.checkFullness()) {
+                System.out.println("Aquarium is full ...");
+                break;
+            }
+            aquarium.addFish(fish);
+        }
+    }
+    public static void swimming(){
+        long fishList = aquarium.getFishList().size();
+        for (int i = 0; i <fishList ; i++) {
+            Fish fish = aquarium.getFishList().get(i);
+            if (fish.isAlive()){
+                System.out.println(i + 1 + " ID: " + fish.getId() + " Thread Fish is swimming gender: " + fish.getGender() +
+                        ", lifespan: " + fish.getLifespan() +
+                        ", position: [" + fish.getPosition().getX() + ", " +
+                        fish.getPosition().getY() + ", " +
+                        fish.getPosition().getZ() + "]," +
+                        "Parent: " + fish.getParent());
+            }
+            if (fish.getLifespan() < 1){
+                fish.setAlive(false);
+                System.out.println("This fish is died: ID " + fish.getId());
+            }
+            fish.setLifespan(fish.getLifespan() - 1);
+        }
+        aquarium.getFishList().removeIf(fish -> !fish.isAlive());
     }
 
     public Fish() {
@@ -125,4 +149,6 @@ public class Fish {
     public void setMotherId(long motherId) {
         this.motherId = motherId;
     }
+
+
 }
