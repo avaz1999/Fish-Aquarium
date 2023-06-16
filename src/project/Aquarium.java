@@ -84,14 +84,18 @@ public class Aquarium {
 
                 long fatherId = fishA.getGender().equals(MALE) ? fishA.getId() : fishB.getId();
                 long motherId = fishA.getGender().equals(FEMALE) ? fishB.getId() : fishA.getId();
+                Gender male = fishA.getGender().equals(MALE) ? fishA.getGender() : fishB.getGender();
+                Gender female = fishB.getGender().equals(FEMALE) ? fishB.getGender() : fishA.getGender();
+
+
                 LinkedList<Fish> parentFish = new LinkedList<>();
                 if (fishB.getFatherId() != 0 && fishB.getMotherId() != 0) {
                     parentFish.add(fishA);
                     for (Fish fish : parentFish) {
-                        if (checkCoordinate(xA, xB, yA, yB, zA, zB) && fatherId == fish.getFatherId() && !fishA.getGender().equals(fish.getGender())) {
+                        if (checkCoordinate(xA, xB, yA, yB, zA, zB) && fatherId == fish.getFatherId() && !male.equals(female)) {
                             System.out.println("This fish father fish: " + fatherId);
                         }
-                        if (checkCoordinate(xA, xB, yA, yB, zA, zB) && motherId == fish.getMotherId() && !fishA.getGender().equals(fish.getGender())) {
+                        if (checkCoordinate(xA, xB, yA, yB, zA, zB) && motherId == fish.getMotherId() && !male.equals(female)) {
                             System.out.println("This fish mother fish: " + motherId);
                         }
                     }
@@ -134,8 +138,8 @@ public class Aquarium {
                             + fish.getPosition().getY() + ", "
                             + fish.getPosition().getZ() + "] " + ", This fish parent: "
                             + fish.getParent());
-                    fishB.setPosition(Coordinate.createCoordinate(width,length,height));
-                    fishList.set(j,fishB);
+                    fishB.setPosition(Coordinate.createCoordinate(width, length, height));
+                    fishList.set(j, fishB);
                     if (checkFullness()) {
                         fishList.remove(fish);
                         System.out.println("Aquarium is full");
