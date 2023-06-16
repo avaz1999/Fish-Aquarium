@@ -72,7 +72,7 @@ public class Aquarium {
     private void checkCollision(LinkedList<Fish> fishList) {
         for (int i = 0; i < fishList.size() - 1; i++) {
             Fish fishA = fishList.get(i);
-            fishList.set(i, fishA);
+
             int xA = fishA.getPosition().getX();
             int yA = fishA.getPosition().getY();
             int zA = fishA.getPosition().getZ();
@@ -84,18 +84,30 @@ public class Aquarium {
 
                 long fatherId = fishA.getGender().equals(MALE) ? fishA.getId() : fishB.getId();
                 long motherId = fishA.getGender().equals(FEMALE) ? fishB.getId() : fishA.getId();
-                if (checkCoordinate(xA, xB, yA, yB, zA, zB) &&
-                        !fishA.getGender().equals(fishB.getGender()) &&
-                        (fishA.getFatherId() == fatherId)) {
-                    System.out.println("This fish is parent 1: " + fishB.getId() + " equals " + motherId);
-
+                LinkedList<Fish> parentFish = new LinkedList<>();
+                if (fishB.getFatherId() != 0 && fishB.getMotherId() != 0) {
+                    parentFish.add(fishA);
+                    for (Fish fish : parentFish) {
+                        if (checkCoordinate(xA, xB, yA, yB, zA, zB) && fatherId == fish.getFatherId() && !fishA.getGender().equals(fish.getGender())) {
+                            System.out.println("This fish father fish: " + fatherId);
+                        }
+                        if (checkCoordinate(xA, xB, yA, yB, zA, zB) && motherId == fish.getMotherId() && !fishA.getGender().equals(fish.getGender())) {
+                            System.out.println("This fish mother fish: " + motherId);
+                        }
+                    }
                 }
-                if (checkCoordinate(xA, xB, yA, yB, zA, zB) &&
-                        !fishA.getGender().equals(fishB.getGender()) &&
-                        fishB.getMotherId() == motherId) {
-                    System.out.println("This fish is parent 2: " + fishB.getMotherId() + " equals " + fatherId);
-
-                }
+//                if (checkCoordinate(xA, xB, yA, yB, zA, zB) &&
+//                        !fishA.getGender().equals(fishB.getGender()) &&
+//                        (fishA.getFatherId() == fatherId)) {
+//                    System.out.println("This fish is parent 1: " + fishB.getId() + " equals " + motherId);
+//
+//                }
+//                if (checkCoordinate(xA, xB, yA, yB, zA, zB) &&
+//                        !fishA.getGender().equals(fishB.getGender()) &&
+//                        fishB.getMotherId() == motherId) {
+//                    System.out.println("This fish is parent 2: " + fishB.getMotherId() + " equals " + fatherId);
+//
+//                }
                 if (checkCoordinate(xA, xB, yA, yB, zA, zB) &&
                         !fishA.getGender().equals(fishB.getGender()) &&
                         fishA.getFatherId() != fatherId &&
@@ -122,7 +134,8 @@ public class Aquarium {
                             + fish.getPosition().getY() + ", "
                             + fish.getPosition().getZ() + "] " + ", This fish parent: "
                             + fish.getParent());
-
+                    fishB.setPosition(Coordinate.createCoordinate(width,length,height));
+                    fishList.set(j,fishB);
                     if (checkFullness()) {
                         fishList.remove(fish);
                         System.out.println("Aquarium is full");

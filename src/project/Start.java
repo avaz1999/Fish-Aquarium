@@ -26,8 +26,8 @@ public class Start {
         aquarium.setLength(length);
         aquarium.setHeight(height);
 
-        int maleFish = 30;  //random.nextInt(50) + 1;  //Generate random male fish
-        int femaleFish = 30;  //random.nextInt(50) + 1;  //Generate random female fish
+        int maleFish =50 ;  //random.nextInt(50) + 1;  //Generate random male fish
+        int femaleFish = 50;  //random.nextInt(50) + 1;  //Generate random female fish
 
         Fish.createFish(maleFish,Gender.MALE);  // Add male fish
         Fish.createFish(femaleFish,Gender.FEMALE);  // ADd female fish
